@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Game = require('../game')
-
+const gameList = require('../../game.json').results
 
 mongoose.connect('mongodb://localhost/game-list', { useNewUrlParser: true, useUnifiedTopology: true })
 
