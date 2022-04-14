@@ -6,6 +6,10 @@ const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 // 載入 mongoose 模組
 const mongoose = require('mongoose')
+// 載入 models/maple.js 模組
+const Maple = require('./models/maple')
+// 載入 models/grand.js 模組
+const Grand = require('./models/grand')
 
 // 設定連線至 mongoDB
 mongoose.connect('mongodb://localhost/game-list', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -38,11 +42,17 @@ app.get('/', (req, res) => {
 })
 
 app.get('/MapleStory', (req, res) => {
-  res.render('maple')
+  Maple.find()  // 取出 Todo model 裡的所有資料
+    .lean()   // 把 Mongoose 的 Model 物件轉換成乾淨的 JavaScript 資料陣列
+    .then(maples => res.render('maple', { maples }))   // 將資料傳給 index 樣板
+    .catch(error => console.log(error)) // 錯誤處理
 })
 
 app.get('/GrandChase', (req, res) => {
-  res.render('grand')
+  Grand.find()
+    .lean()
+    .then(grands => res.render('grand', { grands }))
+    .catch(error => console.log(error))
 })
 
 app.listen(port, () => {

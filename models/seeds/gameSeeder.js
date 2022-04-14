@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
-const Game = require('../game')
-const gameList = require('../../game.json').results
+const maple = require('../maple')
+const grand = require('../grand')
+const mapleList = require('../../maple.json').results
+const grandList = require('../../grand.json').results
 
 mongoose.connect('mongodb://localhost/game-list', { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -12,10 +14,16 @@ db.on('error', () => {
 })
 // 連線成功
 db.once('open', () => {
-  Game.create(gameList)
+  maple.create(mapleList)
     .then(() => {
       // 運行創建資料庫內容
-      console.log('mongodb connected!')
+      console.log('maple mongodb connected!')
+      db.close()
+    })
+    .catch(error => console.log(error))
+  grand.create(grandList)
+    .then(() => {
+      console.log('grand mongodb connected!')
       db.close()
     })
     .catch(error => console.log(error))

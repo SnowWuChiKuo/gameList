@@ -1,1 +1,13 @@
-<h1>GrandChase</h1>
+<ul>
+  {{#each grands}}
+  <li>
+    {{ this.name }}
+  </li>
+  <li>
+    <a href="{{ this.url }}">{{ this.url }}</a>
+  </li>
+  <li>
+    {{ this.info }}
+  </li>
+  {{/each}}
+</ul>
