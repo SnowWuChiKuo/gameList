@@ -12,6 +12,8 @@ const Maple = require('./models/maple')
 const Grand = require('./models/grand')
 // 載入 method-override 模組
 const methodOverride = require('method-override')
+// 引用路由器
+const routes = require('./routes')
 
 
 // 設定連線至 mongoDB
@@ -41,77 +43,8 @@ app.set('view engine', 'hbs')
 app.use(bodyParser.urlencoded({ extended: true }))
 // 設定 method-override
 app.use(methodOverride('_method'))
-
-
-app.get('/', (req, res) => {
-  res.render('index')
-})
-// 瀏覽 MapleStory 頁面
-app.get('/MapleStory', (req, res) => {
-  Maple.find()  // 取出 Todo model 裡的所有資料
-    .lean()   // 把 Mongoose 的 Model 物件轉換成乾淨的 JavaScript 資料陣列
-    .then(maples => res.render('maple', { maples }))   // 將資料傳給 index 樣板
-    .catch(error => console.log(error)) // 錯誤處理
-})
-
-// 瀏覽 MapleStory 新增頁面
-app.get('/mapleStorys/new', (req, res) => {
-  return res.render('newM')
-})
-// 將新增內容放入 瀏覽 MapleStory 頁面 
-app.post('/mapleStorys', (req, res) => {
-  const { name, url, info } = req.body
-  return Maple.create({ name, url, info })
-    .then(() => res.redirect('/MapleStory'))
-    .catch(error => console.log(error))
-})
-// 進入瀏覽頁觀看細部內容
-app.get('/mapleStorys/:id', (req, res) => {
-  const id = req.params.id
-  return Maple.findById(id)
-    .lean()
-    .then((maple) => res.render('detailM', { maple }))
-    .catch(error => console.log(error))
-})
-// 進入編輯頁
-app.get('/mapleStorys/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Maple.findById(id)
-    .lean()
-    .then((maple) => res.render('editM', { maple }))
-    .catch(error => console.log(error))
-})
-// 修改編輯內容
-app.put('/mapleStorys/:id/edit', (req, res) => {
-  const _id = req.params.id
-  const body = req.body
-
-  return Maple.findById(_id)
-    .then(maples => {
-      maples.name = body.name
-      maples.url = body.url
-      maples.info = body.info
-      return maples.save()
-    })
-    .then(() => res.redirect(`/mapleStorys/${_id}`))
-    .catch(error => console.log(error))
-})
-// 刪除此內容
-app.delete('/mapleStorys/:id/delete', (req, res) => {
-  const id = req.params.id
-  return Maple.findById(id)
-    .then(maple => maple.remove())
-    .then(() => res.redirect('/mapleStory'))
-    .catch(error => console.log(error))
-})
-
-app.get('/GrandChase', (req, res) => {
-  Grand.find()
-    .lean()
-    .then(grands => res.render('grand', { grands }))
-    .catch(error => console.log(error))
-})
-
+// 將 request 導入路由器
+app.use(routes)
 
 
 app.listen(port, () => {
