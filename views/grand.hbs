@@ -15,15 +15,27 @@
 <div class="container mt-5">
   <div class="row"> 
     <div class="col-md-10 col-12 mx-auto">
-      <ul>
+      <ul class="list-group">
         {{#each grands}}
-          <li>
-            <a href="{{this.url}}" class="text-dark fs-3">{{this.name}}</a>
-            <a href="./grandChases/{{ this._id }}">detail</a>
-            <a href="./grandChases/{{ this._id }}/edit">edit</a>
-            <form action="./grandChases/{{ this._id }}?_method=DELETE" method="post" style="display: inline;">
-              <button type="submit"> delete </button>
-            </form>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-auto mr-auto">
+                <a href="{{this.url}}" class="text-dark fs-3">
+                  <h4>
+                    {{this.name}}
+                  </h4>
+                  </a>
+              </div>
+              <div class="col-auto ms-auto">
+                <div>
+                  <a class="btn btn-secondary" href="./grandChases/{{ this._id }}">detail</a>
+                  <a class="btn btn-success" href="./grandChases/{{ this._id }}/edit">edit</a>
+                  <form action="./grandChases/{{ this._id }}?_method=DELETE" method="post" style="display: inline;">
+                    <button class="btn btn-danger" type="submit">delete</button>
+                  </form>
+                </div>
+              </div>
+            </div>
           </li>
         {{/each}}
       </ul>
