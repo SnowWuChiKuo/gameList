@@ -1,0 +1,48 @@
+<h1 class="text-center mt-3">{{grand.name}}</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-md-10 mx-auto mt-3">
+
+      <p class="mb-1">
+        <span class="text-secondary">
+          <i class="fas fa-utensils pr-2"></i>
+          網址：
+        </span>
+        <a href="{{grand.url}}">
+          {{grand.url}}
+        </a>
+      </p>
+
+      <p class="mb-1">
+        <span class="text-secondary">
+          <i class="fas fa-mobile-alt pr-2"></i>
+          內容：
+        </span>
+        {{grand.info}}
+      </p>
+      <div class="text-center">
+        <a href="/grandChases/{{ grand._id }}/edit">
+          <button type="button" class="btn btn-success">
+            編輯頁面
+          </button>
+        </a>
+        <a href="/GrandChase">
+          <button type="submit" class="btn btn-primary">
+            回上一頁
+          </button>
+        </a>
+        <form action="/grandChases/{{ grand._id }}?_method=DELETE" method="post" style="display: inline;">
+          <button type="submit" class="btn btn-primary">
+            刪除此頁
+          </button>
+          </a>
+        </form>
+        <a href="/">
+          <button type="button" class="btn btn-outline-secondary">
+            返回首頁
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

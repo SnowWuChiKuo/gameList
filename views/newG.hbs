@@ -1,0 +1,24 @@
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mt-3">新增攻略表單</h1>
+      <form action="/grandChases" method="POST">
+        <div class="form-group">
+          <label for="name">標題</label>
+          <input type="text" id="title" name="name" class="form-control" placeholder="title">
+        </div>
+        <div class="form-group">
+          <label for="url">連結</label>
+          <input type="url" id="url" name="url" class="form-control" placeholder="URL">
+        </div>
+        <div class="form-group">
+          <label for="info">內容</label>
+          <input type="text" id="info" name="info" class="form-control" placeholder="info">
+        </div>
+        <div class="d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary btn-block mt-4">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

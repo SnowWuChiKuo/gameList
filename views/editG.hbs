@@ -1,0 +1,33 @@
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mt-3">編輯攻略表單</h1>
+      <form action="/grandChases/{{ grand._id }}?_method=PUT" method="POST">
+        <div class="form-group">
+          <label for="name">標題</label>
+          <input type="text" id="title" name="name" class="form-control" placeholder="title" value="{{ grand.name }}">
+        </div>
+        <div class="form-group">
+          <label for="url">連結</label>
+          <input type="url" id="url" name="url" class="form-control" placeholder="URL" value="{{ grand.url }}">
+        </div>
+        <div class="form-group">
+          <label for="info">內容</label>
+          <input type="text" id="info" name="info" class="form-control" placeholder="info" value="{{ grand.info }}">
+        </div>
+        <div class="text-center mt-3">
+          <button type="submit" class="btn btn-primary">
+            儲存修改
+          </button>
+          <a href="/">
+            <button type="button" class="btn btn-outline-secondary">
+              返回首頁
+            </button>
+          </a>
+          {{! 使用type="reset" 可以清除/還原輸入 }}
+          <button type="reset" class="btn btn-outline-danger">還原輸入</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
