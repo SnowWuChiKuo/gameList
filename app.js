@@ -11,6 +11,7 @@ const Maple = require('./models/maple')
 // 載入 models/grand.js 模組
 const Grand = require('./models/grand')
 
+
 // 設定連線至 mongoDB
 mongoose.connect('mongodb://localhost/game-list', { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -35,7 +36,8 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: 'hbs' }))
 // 透過 app.set 告訴Express要設定
 app.set('view engine', 'hbs')
 // 設定bodyParser
-app.set(express.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }))
+
 
 app.get('/', (req, res) => {
   res.render('index')
@@ -48,12 +50,64 @@ app.get('/MapleStory', (req, res) => {
     .catch(error => console.log(error)) // 錯誤處理
 })
 
+app.get('/mapleStorys/new', (req, res) => {
+  return res.render('newM')
+})
+
+app.post('/mapleStorys', (req, res) => {
+  const { name, url, info } = req.body
+  return Maple.create({ name, url, info })
+    .then(() => res.redirect('/MapleStory'))
+    .catch(error => console.log(error))
+})
+
+app.get('/mapleStorys/:id', (req, res) => {
+  const id = req.params.id
+  return Maple.findById(id)
+    .lean()
+    .then((maple) => res.render('detailM', { maple }))
+    .catch(error => console.log(error))
+})
+
+app.get('/mapleStorys/:id/edit', (req, res) => {
+  const id = req.params.id
+  return Maple.findById(id)
+    .lean()
+    .then((maple) => res.render('editM', { maple }))
+    .catch(error => console.log(error))
+})
+
+app.post('/mapleStorys/:id/edit', (req, res) => {
+  const _id = req.params.id
+  const body = req.body
+
+  return Maple.findById(_id)
+    .then(maples => {
+      maples.name = body.name
+      maples.url = body.url
+      maples.info = body.info
+      return maples.save()
+    })
+    .then(() => res.redirect(`/mapleStorys/${_id}`))
+    .catch(error => console.log(error))
+})
+
+app.post('/mapleStorys/:id/delete', (req, res) => {
+  const id = req.params.id
+  return Maple.findById(id)
+    .then(maple => maple.remove())
+    .then(() => res.redirect('/mapleStory'))
+    .catch(error => console.log(error))
+})
+
 app.get('/GrandChase', (req, res) => {
   Grand.find()
     .lean()
     .then(grands => res.render('grand', { grands }))
     .catch(error => console.log(error))
 })
+
+
 
 app.listen(port, () => {
   console.log(`App is running in http://localhost:${port}`)
