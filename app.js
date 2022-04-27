@@ -10,6 +10,8 @@ const mongoose = require('mongoose')
 const Maple = require('./models/maple')
 // 載入 models/grand.js 模組
 const Grand = require('./models/grand')
+// 載入 method-override 模組
+const methodOverride = require('method-override')
 
 
 // 設定連線至 mongoDB
@@ -37,12 +39,14 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: 'hbs' }))
 app.set('view engine', 'hbs')
 // 設定bodyParser
 app.use(bodyParser.urlencoded({ extended: true }))
+// 設定 method-override
+app.use(methodOverride('_method'))
 
 
 app.get('/', (req, res) => {
   res.render('index')
 })
-
+// 瀏覽 MapleStory 頁面
 app.get('/MapleStory', (req, res) => {
   Maple.find()  // 取出 Todo model 裡的所有資料
     .lean()   // 把 Mongoose 的 Model 物件轉換成乾淨的 JavaScript 資料陣列
@@ -50,17 +54,18 @@ app.get('/MapleStory', (req, res) => {
     .catch(error => console.log(error)) // 錯誤處理
 })
 
+// 瀏覽 MapleStory 新增頁面
 app.get('/mapleStorys/new', (req, res) => {
   return res.render('newM')
 })
-
+// 將新增內容放入 瀏覽 MapleStory 頁面 
 app.post('/mapleStorys', (req, res) => {
   const { name, url, info } = req.body
   return Maple.create({ name, url, info })
     .then(() => res.redirect('/MapleStory'))
     .catch(error => console.log(error))
 })
-
+// 進入瀏覽頁觀看細部內容
 app.get('/mapleStorys/:id', (req, res) => {
   const id = req.params.id
   return Maple.findById(id)
@@ -68,7 +73,7 @@ app.get('/mapleStorys/:id', (req, res) => {
     .then((maple) => res.render('detailM', { maple }))
     .catch(error => console.log(error))
 })
-
+// 進入編輯頁
 app.get('/mapleStorys/:id/edit', (req, res) => {
   const id = req.params.id
   return Maple.findById(id)
@@ -76,8 +81,8 @@ app.get('/mapleStorys/:id/edit', (req, res) => {
     .then((maple) => res.render('editM', { maple }))
     .catch(error => console.log(error))
 })
-
-app.post('/mapleStorys/:id/edit', (req, res) => {
+// 修改編輯內容
+app.put('/mapleStorys/:id/edit', (req, res) => {
   const _id = req.params.id
   const body = req.body
 
@@ -91,8 +96,8 @@ app.post('/mapleStorys/:id/edit', (req, res) => {
     .then(() => res.redirect(`/mapleStorys/${_id}`))
     .catch(error => console.log(error))
 })
-
-app.post('/mapleStorys/:id/delete', (req, res) => {
+// 刪除此內容
+app.delete('/mapleStorys/:id/delete', (req, res) => {
   const id = req.params.id
   return Maple.findById(id)
     .then(maple => maple.remove())
