@@ -2,8 +2,8 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
-const res = require('express/lib/response')
 const FacebookStrategy = require('passport-facebook').Strategy
+const GoogleStrategy = require('passport-google-oauth20').Strategy
 
 module.exports = app => {
   // 初始化 Passport 模組
@@ -51,7 +51,35 @@ module.exports = app => {
           .catch(error => done(error, false))
       })
   }))
+  // google 第三方登入
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK,
+    profileFields:['displayName', 'email'],
+  },
+  (accessToken, refreshToken, profile, done) => {
+    // console.log(profile)
+    const { name, email } = profile._json
+    User.findOne({ email, name })
+      .then(user => {
+        if (user) return done(null, user)
 
+        const randomPassword = Math.random().toString(36).slice(-8)
+        bcrypt
+          .genSalt(10)
+          .then(salt => bcrypt.hash(randomPassword, salt))
+          .then(hash => User.create({
+            name,
+            email,
+            password: hash
+          }))
+          .then(user => done(null, user))
+          .catch(error => done(error, false))
+      })
+  }
+
+  ))
   // 設定序列化與反序列化
   passport.serializeUser((user, done) => {
     done(null, user.id)

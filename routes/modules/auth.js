@@ -14,5 +14,16 @@ router.get('/facebook/callback', passport.authenticate('facebook', {
   failureRedirect: '/users/login'
 }))
 
+// 使用者按下 google 可以觸發的按鈕
+router.get('/google', passport.authenticate('google', {
+  scope: ['email', 'profile']
+}))
+
+
+router.get('/google/callback', passport.authenticate('google', {
+  successRedirect: '/',
+  failureRedirect: '/users/login'
+}))
+
 // 匯出路由器
 module.exports = router
