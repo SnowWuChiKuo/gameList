@@ -1,8 +1,10 @@
 // 載入 mongoose 模組
 const mongoose = require('mongoose')
 
+const MONGODB_URI = process.env.MONGODB_URI
+
 // 設定連線至 mongoDB
-mongoose.connect('mongodb://localhost/game-list', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // 取得連線狀態
 const db = mongoose.connection

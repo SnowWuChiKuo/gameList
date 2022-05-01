@@ -12,6 +12,11 @@ const methodOverride = require('method-override')
 const flash = require('connect-flash')
 // 載入設定檔，要寫在 express-session 以後
 const usePassport = require('./config/passport')
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 // 引用路由器
 const routes = require('./routes')
 // 引用 mongoose 模組
@@ -19,7 +24,7 @@ require('./config/mongoose')
 
 const app = express()
 // 建立 port 號
-const port = 3000
+const PORT = process.env.PORT
 
 // 使用樣板引擎 (第一個參數是樣板引擎名稱，第二個參數是放入此樣板引擎的相關設定)
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: 'hbs' }))
@@ -27,7 +32,7 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: 'hbs' }))
 app.set('view engine', 'hbs')
 // 設定 session
 app.use(session({
-  secret: 'ThisIsMySecret',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }))
@@ -51,6 +56,6 @@ app.use((req, res, next) => {
 app.use(routes)
 
 
-app.listen(port, () => {
-  console.log(`App is running in http://localhost:${port}`)
+app.listen(PORT, () => {
+  console.log(`App is running in http://localhost:${PORT}`)
 })
