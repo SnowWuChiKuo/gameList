@@ -11,33 +11,37 @@ router.get('/new', (req, res) => {
 })
 // 將新增內容放入 瀏覽 GrandChase 頁面
 router.post('/', (req, res) => {
+  const userId = req.user._id
   const { name, url, info } = req.body
-  return Grand.create({ name, url, info })
+  return Grand.create({ name, url, info, userId })
     .then(() => res.redirect('/GrandChase'))
     .catch(error => console.log(error))
 })
 // 進入瀏覽頁觀看細部內容
 router.get('/:id', (req, res) => {
-  const id = req.params.id
-  return Grand.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Grand.findOne({ _id, userId })
     .lean()
     .then((grand) => res.render('detailG', {grand}))
     .catch(error => console.log(error))
 })
 // 進入編輯頁
 router.get('/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Grand.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Grand.findOne({ _id, userId })
     .lean()
     .then((grand) => res.render('editG', { grand }))
     .catch(error => console.log(error))
 })
 // 修改編輯內容
 router.put('/:id', (req, res) => {
+  const userId = req.user._id
   const _id = req.params.id
   const body = req.body
 
-  return Grand.findById(_id)
+  return Grand.findOne({ _id, userId })
     .then(grand => {
       grand.name = body.name
       grand.url = body.url
@@ -49,8 +53,9 @@ router.put('/:id', (req, res) => {
 })
 // 刪除此內容
 router.delete('/:id', (req, res) => {
-  const id = req.params.id
-  return Grand.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Grand.findOne({ _id, userId })
     .then(grand => grand.remove())
     .then(() => res.redirect('/grandChase'))
     .catch(error => console.log(error))

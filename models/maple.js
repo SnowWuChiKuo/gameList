@@ -10,6 +10,12 @@ const mapleSchema = new Schema({
   },
   info: {
     type: String
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User', // 參考哪一個項目這裡是參考 user.js 中的 user
+    index: true, // 把 userId 當索引
+    required: true // 必填欄位
   }
 })
 

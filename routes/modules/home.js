@@ -12,14 +12,16 @@ router.get('/', (req, res) => {
 
 // 瀏覽 MapleStory 頁面 && 定義 maple 首頁路由
 router.get('/MapleStory', (req, res) => {
-  Maple.find()  // 取出 Todo model 裡的所有資料
+  const userId = req.user._id // 變數設定
+  Maple.find({ userId })  // 取出 Todo model 裡的所有資料
     .lean()   // 把 Mongoose 的 Model 物件轉換成乾淨的 JavaScript 資料陣列
     .then(maples => res.render('maple', { maples }))   // 將資料傳給 index 樣板
     .catch(error => console.log(error)) // 錯誤處理
 })
 // 瀏覽 GrandChase 頁面 && 定義 grand 首頁路由
 router.get('/GrandChase', (req, res) => {
-  Grand.find()
+  const userId = req.user._id
+  Grand.find({ userId })
     .lean()
     .then(grands => res.render('grand', { grands }))
     .catch(error => console.log(error))
